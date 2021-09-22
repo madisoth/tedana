@@ -146,8 +146,8 @@ def kundu_selection_v2(comptable, n_echos, n_vols):
     comptable['rationale'] = ''
 
     # Set knobs
-    LOW_PERC = 25
-    HIGH_PERC = 90
+    LOW_PERC = 0
+    HIGH_PERC = 70
     if n_vols < 100:
         EXTEND_FACTOR = 3
     else:
