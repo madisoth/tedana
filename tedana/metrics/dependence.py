@@ -223,7 +223,7 @@ def threshold_map(maps, mask, ref_img, threshold, csize=None):
     n_voxels, n_components = maps.shape
     maps_thresh = np.zeros([n_voxels, n_components], bool)
     if csize is None:
-        csize = np.max([int(n_voxels * 0.0005) + 5, 20])
+        csize = np.max([int(n_voxels * 0.0035) + 35, 140])
     else:
         csize = int(csize)
 
@@ -269,7 +269,7 @@ def threshold_to_match(maps, n_sig_voxels, mask, ref_img, csize=None):
     n_voxels, n_components = maps.shape
     abs_maps = np.abs(maps)
     if csize is None:
-        csize = np.max([int(n_voxels * 0.0005) + 5, 20])
+        csize = np.max([int(n_voxels * 0.0035) + 35, 140])
     else:
         csize = int(csize)
 
@@ -411,7 +411,7 @@ def compute_dice(clmaps1, clmaps2, axis=0):
     return dice_values
 
 
-def compute_signal_minus_noise_z(Z_maps, Z_clmaps, F_T2_maps, z_thresh=1.95):
+def compute_signal_minus_noise_z(Z_maps, Z_clmaps, F_T2_maps, z_thresh=2.58):
     """Compare signal and noise z-statistic distributions with a two-sample t-test.
 
     Divide voxel-level thresholded F-statistic maps into distributions of
@@ -475,7 +475,7 @@ def compute_signal_minus_noise_z(Z_maps, Z_clmaps, F_T2_maps, z_thresh=1.95):
     return signal_minus_noise_z, signal_minus_noise_p
 
 
-def compute_signal_minus_noise_t(Z_maps, Z_clmaps, F_T2_maps, z_thresh=1.95):
+def compute_signal_minus_noise_t(Z_maps, Z_clmaps, F_T2_maps, z_thresh=2.58):
     """Compare signal and noise t-statistic distributions with a two-sample t-test.
 
     Divide voxel-level thresholded F-statistic maps into distributions of
@@ -539,7 +539,7 @@ def compute_countsignal(stat_cl_maps):
     return countsignal
 
 
-def compute_countnoise(stat_maps, stat_cl_maps, stat_thresh=1.95):
+def compute_countnoise(stat_maps, stat_cl_maps, stat_thresh=2.58):
     """Count the number of significant voxels from non-significant clusters.
 
     This is done after application of a cluster-defining threshold, but compared against results
