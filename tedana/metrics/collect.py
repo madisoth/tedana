@@ -173,21 +173,21 @@ def generate_metrics(
 
     if "map Z clusterized" in required_metrics:
         LGR.info("Thresholding z-statistic maps")
-        z_thresh = 1.95
+        z_thresh = 2.58
         metric_maps["map Z clusterized"] = dependence.threshold_map(
             metric_maps["map Z"], mask, ref_img, z_thresh
         )
 
     if "map FT2 clusterized" in required_metrics:
         LGR.info("Calculating T2* F-statistic maps")
-        f_thresh, _, _ = getfbounds(len(tes))
+        _, _, f_thresh = getfbounds(len(tes))
         metric_maps["map FT2 clusterized"] = dependence.threshold_map(
             metric_maps["map FT2"], mask, ref_img, f_thresh
         )
 
     if "map FS0 clusterized" in required_metrics:
         LGR.info("Calculating S0 F-statistic maps")
-        f_thresh, _, _ = getfbounds(len(tes))
+        _, _, f_thresh = getfbounds(len(tes))
         metric_maps["map FS0 clusterized"] = dependence.threshold_map(
             metric_maps["map FS0"], mask, ref_img, f_thresh
         )
