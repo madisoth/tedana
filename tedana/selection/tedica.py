@@ -187,9 +187,9 @@ def kundu_selection_v2(comptable, n_echos, n_vols):
     comptable.loc[temp_rej1, 'rationale'] += 'I004;'
     rej = np.union1d(temp_rej1, rej)
 
-    # T-value is less than 20 (signal F-statistic not sufficiently greater than noise in
+    # T-value is less than 0 (noise F-statistic greater than signal in
     # map) and variance explained is higher than the median across components.
-    temp_rej2 = unclf[(comptable.loc[unclf, 'signal-noise_t'] < 20) &
+    temp_rej2 = unclf[(comptable.loc[unclf, 'signal-noise_t'] < 0) &
                       (comptable.loc[unclf, 'variance explained'] >
                       np.median(comptable['variance explained']))]
     comptable.loc[temp_rej2, 'classification'] = 'rejected'
