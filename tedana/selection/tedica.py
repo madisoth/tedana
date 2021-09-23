@@ -146,8 +146,8 @@ def kundu_selection_v2(comptable, n_echos, n_vols):
     comptable['rationale'] = ''
 
     # Set knobs
-    LOW_PERC = 0
-    HIGH_PERC = 70
+    LOW_PERC = 25
+    HIGH_PERC = 90
     if n_vols < 100:
         EXTEND_FACTOR = 3
     else:
@@ -165,14 +165,14 @@ def kundu_selection_v2(comptable, n_echos, n_vols):
     Step 1: Reject anything that's obviously an artifact
     a. Estimate a null variance
     """
-    # Rho is higher than Kappa
-    temp_rej0a = all_comps[(comptable['rho'] > comptable['kappa'])]
+    # Rho is higher than Kappa / 4
+    temp_rej0a = all_comps[((4 * comptable['rho']) > comptable['kappa'])]
     comptable.loc[temp_rej0a, 'classification'] = 'rejected'
     comptable.loc[temp_rej0a, 'rationale'] += 'I002;'
 
-    # Number of significant voxels for S0 model is higher than number for T2
+    # Number of significant voxels for S0 model is higher than 1/6 number for T2
     # model *and* number for T2 model is greater than zero.
-    temp_rej0b = all_comps[((comptable['countsigFS0'] > comptable['countsigFT2']) &
+    temp_rej0b = all_comps[((( 6 * comptable['countsigFS0']) > comptable['countsigFT2']) &
                             (comptable['countsigFT2'] > 0))]
     comptable.loc[temp_rej0b, 'classification'] = 'rejected'
     comptable.loc[temp_rej0b, 'rationale'] += 'I003;'
@@ -187,9 +187,9 @@ def kundu_selection_v2(comptable, n_echos, n_vols):
     comptable.loc[temp_rej1, 'rationale'] += 'I004;'
     rej = np.union1d(temp_rej1, rej)
 
-    # T-value is less than zero (noise has higher F-statistics than signal in
+    # T-value is less than 20 (signal F-statistic not sufficiently greater than noise in
     # map) and variance explained is higher than the median across components.
-    temp_rej2 = unclf[(comptable.loc[unclf, 'signal-noise_t'] < 0) &
+    temp_rej2 = unclf[(comptable.loc[unclf, 'signal-noise_t'] < 20) &
                       (comptable.loc[unclf, 'variance explained'] >
                       np.median(comptable['variance explained']))]
     comptable.loc[temp_rej2, 'classification'] = 'rejected'
@@ -349,7 +349,7 @@ def kundu_selection_v2(comptable, n_echos, n_vols):
         conservative_guess = num_acc_guess / RESTRICT_FACTOR
         candartA = np.intersect1d(
             unclf[comptable.loc[unclf, 'd_table_score_scrub'] > conservative_guess],
-            unclf[comptable.loc[unclf, 'kappa ratio'] > EXTEND_FACTOR * 2])
+            unclf[comptable.loc[unclf, 'kappa ratio'] > EXTEND_FACTOR / 2]) # EXTEND_FACTOR * 2 in orig v2.5 tree
         candartA = (candartA[comptable.loc[candartA, 'variance explained'] >
                     varex_upper * EXTEND_FACTOR])
         comptable.loc[candartA, 'classification'] = 'rejected'
