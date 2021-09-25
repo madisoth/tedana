@@ -223,7 +223,7 @@ def threshold_map(maps, mask, ref_img, threshold, csize=None):
     n_voxels, n_components = maps.shape
     maps_thresh = np.zeros([n_voxels, n_components], bool)
     if csize is None:
-        csize = np.max([int(n_voxels * 0.0005) + 35, 140])
+        csize = np.max([int(n_voxels * 0.0005) + 10, 40])
     else:
         csize = int(csize)
 
