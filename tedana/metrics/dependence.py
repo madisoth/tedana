@@ -223,7 +223,7 @@ def threshold_map(maps, mask, ref_img, threshold, csize=None):
     n_voxels, n_components = maps.shape
     maps_thresh = np.zeros([n_voxels, n_components], bool)
     if csize is None:
-        csize = np.max([int(n_voxels * 0.0005) + 5, 20])
+        csize = np.max([int(n_voxels * 0.0005) + 25, 100])
     else:
         csize = int(csize)
 
@@ -269,7 +269,7 @@ def threshold_to_match(maps, n_sig_voxels, mask, ref_img, csize=None):
     n_voxels, n_components = maps.shape
     abs_maps = np.abs(maps)
     if csize is None:
-        csize = np.max([int(n_voxels * 0.0005) + 5, 20])
+        csize = np.max([int(n_voxels * 0.0005) + 25, 100])
     else:
         csize = int(csize)
 
