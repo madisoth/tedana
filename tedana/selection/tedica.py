@@ -196,6 +196,14 @@ def kundu_selection_v2(comptable, n_echos, n_vols):
     comptable.loc[temp_rej2, 'rationale'] += 'I005;'
     rej = np.union1d(temp_rej2, rej)
     unclf = np.setdiff1d(unclf, rej)
+    
+    # varex of component is > 4% AND > (8 * median component varex)
+    temp_rej3 = unclf[(comptable.loc[unclf, 'variance explained'] > np.max(
+                      np.median(comptable['variance explained']) * 8.0), 4.0)]
+    comptable.loc[temp_rej3, 'classification'] = 'rejected'
+    comptable.loc[temp_rej3, 'rationale'] += 'I100;'
+    rej = np.union1d(temp_rej3, rej)
+    unclf = np.setdiff1d(unclf, rej)
 
     # Quit early if no potentially accepted components remain
     if len(unclf) == 0:
