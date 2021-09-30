@@ -198,7 +198,7 @@ def kundu_selection_v2(comptable, n_echos, n_vols):
     
     # varex of component is > 4% AND > (8 * median component varex)
     temp_rej3 = unclf[(comptable.loc[unclf, 'variance explained'] > np.max(
-                      np.median(comptable['variance explained']) * 8.0, 4.0)]
+                      np.median(comptable['variance explained']) * 8.0, 4.0))]
     comptable.loc[temp_rej3, 'classification'] = 'rejected'
     comptable.loc[temp_rej3, 'rationale'] += 'I100;'
     rej = np.union1d(temp_rej3, rej)
