@@ -160,13 +160,12 @@ def kundu_selection_v2(comptable, n_echos, n_vols):
     # since the default classification is "accepted", at the end of the tree
     # the remaining elements in unclf are classified as accepted
     unclf = all_comps.copy()
-
     """
     Step 1: Reject anything that's obviously an artifact
     a. Estimate a null variance
     """
     # Rho is higher than min Rho + (Kappa + min Kappa) / 5
-    temp_rej0a = all_comps[((comptable['rho']) > (np.min(comptable.loc['rho']) + (np.min(comptable.loc['kappa']) + comptable['kappa']) / 5))]
+    temp_rej0a = all_comps[((comptable['rho']) > (np.min(comptable.loc[all_comps, 'rho']) + (np.min(comptable.loc[all_comps, 'kappa']) + comptable['kappa']) / 5))]
     comptable.loc[temp_rej0a, 'classification'] = 'rejected'
     comptable.loc[temp_rej0a, 'rationale'] += 'I002;'
 
