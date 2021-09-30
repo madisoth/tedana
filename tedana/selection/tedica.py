@@ -336,7 +336,7 @@ def kundu_selection_v2(comptable, n_echos, n_vols):
     # but only if they have bad decision scores
     ign = np.setdiff1d(ign, ign[comptable.loc[ign, "d_table_score"] < max_good_d_score])
     # and low kappa
-    ign = np.setdiff1d(ign, ign[comptable.loc[ign, "kappa"] > kappa_elbow])
+    # ign = np.setdiff1d(ign, ign[comptable.loc[ign, "kappa"] > kappa_elbow]) # test skipping kappa threshold for babies
     comptable.loc[ign, "classification"] = "ignored"
     comptable.loc[ign, "rationale"] += "I008;"
     unclf = np.setdiff1d(unclf, ign)
