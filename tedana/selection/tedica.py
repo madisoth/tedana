@@ -174,14 +174,14 @@ def kundu_selection_v2(comptable, n_echos, n_vols):
     a. Estimate a null variance
     """
     # Rho is higher than Kappa
-    temp_rej0a = all_comps[(comptable["rho"] > comptable["kappa"])]
+    temp_rej0a = all_comps[(0.8 * comptable["rho"] > comptable["kappa"])]
     comptable.loc[temp_rej0a, "classification"] = "rejected"
     comptable.loc[temp_rej0a, "rationale"] += "I002;"
 
     # Number of significant voxels for S0 model is higher than number for T2
     # model *and* number for T2 model is greater than zero.
     temp_rej0b = all_comps[
-        ((comptable["countsigFS0"] > comptable["countsigFT2"]) & (comptable["countsigFT2"] > 0))
+        ((comptable[0.6 * "countsigFS0"] > comptable["countsigFT2"]) & (comptable["countsigFT2"] > 0))
     ]
     comptable.loc[temp_rej0b, "classification"] = "rejected"
     comptable.loc[temp_rej0b, "rationale"] += "I003;"
@@ -208,6 +208,15 @@ def kundu_selection_v2(comptable, n_echos, n_vols):
     rej = np.union1d(temp_rej2, rej)
     unclf = np.setdiff1d(unclf, rej)
 
+    # varex of component is > 4% AND > (8 * median component varex)
+    temp_rej3 = unclf[((comptable.loc[unclf, 'variance explained'] > 4.0) &
+                      (comptable.loc[unclf, 'variance explained'] >
+                      8 * np.median(comptable.loc[unclf, 'variance explained'])))]
+    comptable.loc[temp_rej3, 'classification'] = 'rejected'
+    comptable.loc[temp_rej3, 'rationale'] += 'I100;'
+    rej = np.union1d(temp_rej3, rej)
+    unclf = np.setdiff1d(unclf, rej)
+    
     # Quit early if no potentially accepted components remain
     if len(unclf) == 0:
         LGR.warning("No BOLD-like components detected. Ignoring all remaining components.")
@@ -374,7 +383,7 @@ def kundu_selection_v2(comptable, n_echos, n_vols):
         conservative_guess = num_acc_guess / RESTRICT_FACTOR
         candartA = np.intersect1d(
             unclf[comptable.loc[unclf, "d_table_score_scrub"] > conservative_guess],
-            unclf[comptable.loc[unclf, "kappa ratio"] > EXTEND_FACTOR * 2],
+            unclf[comptable.loc[unclf, "kappa ratio"] > EXTEND_FACTOR / 2], # EXTEND_FACTOR * 2 in original v2.5 tree
         )
         candartA = candartA[
             comptable.loc[candartA, "variance explained"] > varex_upper * EXTEND_FACTOR
