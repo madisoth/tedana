@@ -181,7 +181,7 @@ def kundu_selection_v2(comptable, n_echos, n_vols):
     # Number of significant voxels for S0 model is higher than number for T2
     # model *and* number for T2 model is greater than zero.
     temp_rej0b = all_comps[
-        ((comptable[0.6 * "countsigFS0"] > comptable["countsigFT2"]) & (comptable["countsigFT2"] > 0))
+        ((0.6 * comptable["countsigFS0"] > comptable["countsigFT2"]) & (comptable["countsigFT2"] > 0))
     ]
     comptable.loc[temp_rej0b, "classification"] = "rejected"
     comptable.loc[temp_rej0b, "rationale"] += "I003;"
